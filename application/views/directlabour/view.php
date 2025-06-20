@@ -1,77 +1,89 @@
-<h4>Direct Labor</h4>
-<div style="width: 99.5%;margin-left: 2px">
-    <div align="left" style="margin-top: 5px;margin-bottom: 5px;">
-        <form id="search_form" onsubmit="directlabour_search(0); return false;">
-            <span class="labelelement">Description</span>
-            <input type="text" name="description" />
-            <button type="submit">Search</button>
-            <?php if (in_array('add', $accessmenu)) { ?>
-                <button type="button" onclick="directlabour_add()">Add</button>
-            <?php } ?>
-        </form>
-    </div>
-    <div id="groupsdata" style="width:50%">
+<div id="vendor_toolbar" style="padding-bottom: 0;">     
+    <form id="vendor_search_form" onsubmit="vendor_search();return false;">       
+    Code : 
+    <input type="text" 
+           size="12" 
+           class="easyui-validatebox" 
+           id="vendor_code_s" 
+           onkeyup="if (event.keyCode == 13) {
+                       vendor_search()
+                   }"
+           />    
+    Name : 
+    <input type="text" 
+           size="12" 
+           class="easyui-validatebox" 
+           id="vendor_name_s" 
+           onkeyup="if (event.keyCode == 13) {
+                       vendor_search()
+                   }"
+           />    
+    Address : 
+    <input type="text" 
+           size="20" 
+           class="easyui-validatebox" 
+           id="vendor_address_s"
+           onkeyup="if (event.keyCode == 13) {
+                       vendor_search()
+                   }"
+           />
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="vendor_search()"> Search</a>
     <?php
-    // Kumpulkan kembali semua variabel yang dibutuhkan oleh search.php
-    $search_data = array(
-        'directlabor'  => $directlabor,
-        'accessmenu' => $accessmenu,
-        'num_rows'   => $num_rows,
-        'page'       => $page,
-        'num_page'   => $num_page,
-        'first'      => $first,
-        'prev'       => $prev,
-        'next'       => $next,
-        'last'       => $last
-    );
-    $this->load->view('directlabour/search', $search_data);
+    if (in_array('add', $action)) {
+        ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="vendor_add()">Add</a>
+        <?php
+    }if (in_array('edit', $action)) {
+        ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="vendor_edit()">Edit</a>
+        <?php
+    }if (in_array('delete', $action)) {
+        ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="vendor_delete()">Delete</a>
+        <?php
+    }
     ?>
+    </form>
 </div>
-</div>
-
-<script>
-// Pastikan jQuery sudah di-load di halaman utama Anda (misal: home.php)
-
-function directlabour_search(offset) {
-    // Menampilkan loading
-    $("#groupsdata").html("<p>Loading...</p>");
-    $.ajax({
-        url: "<?php echo site_url('directlabour/search'); ?>/" + offset,
-        type: 'POST',
-        data: $('#search_form').serialize(), // Mengirim data form
-        success: function(response) {
-            $('#groupsdata').html(response); // Menampilkan tabel baru
-        },
-        error: function() {
-            $('#groupsdata').html("<p>Error loading data.</p>");
-        }
+<table id="vendor" data-options="
+       url:'<?php echo site_url('vendor/get') ?>',
+       method:'post',
+       title:'Vendor',
+       border:true,
+       singleSelect:true,
+       fit:true,
+       rownumbers:true,
+       fitColumns:false,
+       pagination:true,
+       striped:true,
+       sortName:'id',
+       sortOrder:'desc',
+       toolbar:'#vendor_toolbar'">
+    <thead>
+        <tr>
+            <th field="id"hidden="true"></th>            
+            <th field="code" width="100" align="center" sortable="true">Code</th>
+            <th field="name" width="120" halign="center" sortable="true">Name</th>
+            <th field="currency" width="120" halign="center" sortable="true">Currency</th>
+            <th field="taxable" width="80" align="center" sortable="true">Taxable</th>
+            <th field="payment_terms" width="100" align="center" sortable="true">Payment Terms</th>
+            <th field="address1" width="200" halign="center" sortable="true">Address</th>
+            <th field="city" width="100" align="center" sortable="true">City</th>
+            <th field="state" width="100" align="center" sortable="true">State</th>
+            <th field="zipcode" width="100" align="center">Zip Code</th>
+            <th field="country" width="100" align="center" sortable="true">Country</th>
+            <th field="contact" width="100" halign="center">Contact Person</th>
+            <th field="service" width="200" halign="center" sortable="true">Service</th>
+            <th field="phone" width="100" halign="center" sortable="true">Phone</th>
+            <th field="fax" width="100" align="center">Fax</th>
+            <th field="email" width="100" align="center">Email</th>         
+        </tr>
+    </thead>
+</table>
+<script type="text/javascript">
+    $(function () {
+        $('#vendor').datagrid({});
     });
-}
-
-// Fungsi untuk pindah ke halaman add
-function directlabour_add() {
-    window.location.href = "<?php echo site_url('directlabour/add'); ?>";
-}
-
-// Fungsi untuk pindah ke halaman edit
-function directlabour_edit(id) {
-    window.location.href = "<?php echo site_url('directlabour/edit'); ?>/" + id;
-}
-
-// Fungsi untuk menghapus data
-function directlabour_delete(id) {
-    if (confirm('Are you sure you want to delete this data?')) {
-        window.location.href = "<?php echo site_url('directlabour/delete'); ?>/" + id;
-    }
-}
-
-// Menangani klik pada link paginasi secara dinamis
-$(document).on('click', '.pagination a', function(event) {
-    event.preventDefault(); // Mencegah link berpindah halaman secara normal
-    var href = $(this).attr('href');
-    var offset = href.split('/').pop(); // Mengambil angka offset dari akhir URL
-    if ($.isNumeric(offset)) {
-        directlabour_search(offset);
-    }
-});
 </script>
+<?php
+$this->load->view('vendor/add');

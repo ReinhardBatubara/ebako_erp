@@ -1,46 +1,64 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Perbaikan: Nama class diawali huruf besar sesuai standar CodeIgniter
-class Model_directlabour extends CI_Model {
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+/**
+ * Description of model_directlabour
+ *
+ * @author hp
+ */
+class model_directlabour extends CI_Model {
+
+    //put your code here
     public function __construct() {
         parent::__construct();
     }
 
-    // Fungsi untuk menghitung total baris (pengganti getNumRows)
-    public function get_count($description = '') {
+    function selectAll() {
+        return $this->db->query("select * from directlabour")->result();
+    }
+
+    function getNumRows($description) {
+        $query = "select * from directlabour where true ";
         if (!empty($description)) {
-            $this->db->like('description', $description, 'both', FALSE);
+            $query .= " and description ilike '%$description%' ";
         }
-        return $this->db->count_all_results('directlabour');
+        return $this->db->query($query)->num_rows();
     }
 
-    // Fungsi untuk mengambil data dengan paginasi (pengganti search)
-    public function get_data($description = '', $limit, $offset) {
+    function search($description, $limit, $offset) {
+        $query = "select * from directlabour where true ";
         if (!empty($description)) {
-            $this->db->like('description', $description, 'both', FALSE);
+            $query .= " and description ilike '%$description%' ";
         }
-        $this->db->order_by('id', 'DESC');
-        $this->db->limit($limit, $offset);
-        return $this->db->get('directlabour')->result();
+        $query .= " order by id desc limit $limit offset $offset ";
+        return $this->db->query($query)->result();
     }
 
-    // Fungsi untuk mengambil data by ID (pengganti selectById)
-    public function get_by_id($id) {
-        return $this->db->get_where('directlabour', ['id' => $id])->row();
+    function selectById($id) {
+        return $this->db->query("select * from directlabour where id=$id")->row();
     }
 
-    public function insert($data) {
-        return $this->db->insert('directlabour', $data);
+    function insert($directlabour) {
+        return $this->db->insert('directlabour', $directlabour);
     }
 
-    public function update($id, $data) {
-        return $this->db->update('directlabour', $data, ['id' => $id]);
+    function update($directlabour, $where) {
+        return $this->db->update('directlabour', $directlabour, $where);
     }
-    
-    public function delete($id) {
-        return $this->db->delete('directlabour', ['id' => $id]);
+
+    function delete($id) {
+        return $this->db->query("delete from directlabour where id=$id");
     }
+
+    function getPrice($itemid) {
+        $query = "select price,curr from directlabour where id=$itemid limit 1;";
+        return $this->db->query($query)->row();
+    }
+
 }
+
 ?>

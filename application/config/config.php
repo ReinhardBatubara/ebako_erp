@@ -362,7 +362,16 @@ $config['rewrite_short_tags'] = FALSE;
   |
  */
 $config['proxy_ips'] = '';
-
+$config['unitdays'] = array("Days", "Week", "Month");
+$config['limit'] = 25;
+$config['postatus'] = array("Open", "Finish", "Close");
+$config['mrstatus'] = array("Open", "Finish", "Close");
+$config['sostatus'] = array(0 => "Waiting to Approve", 1 => "Approve", 2 => "Reject", 3 => "Production", 4 => "Finish");
+$config['mrstatus'] = array(0 => "Waiting to approve", 1 => "Open", 2 => "Finish", 3 => "Close");
+$config['shipmentvia'] = array("Land", "Sea", "Air");
+$config['rfqstatus'] = array(0 => "--Status--", 1 => "APPROVE", 2 => "CLOSE");
+$config['sodetailstatus'] = array(0 => "", 1 => "Final", 2 => "Updated");
+putenv('TZ=Asia/Jakarta');
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

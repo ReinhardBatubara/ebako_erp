@@ -136,6 +136,7 @@ document.write('<script type="text/javascript" src="js/carvingpricelist.js"></sc
 document.write('<script type="text/javascript" src="js/carver.js"></script>');
 document.write('<script type="text/javascript" src="js/carvingsubmission.js"></script>');
 document.write('<script type="text/javascript" src="js/directlabour.js"></script>');
+document.write('<script type="text/javascript" src="js/setup.js"></script>');
 
 $.fn.serializeObject = function ()
 {

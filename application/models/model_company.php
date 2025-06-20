@@ -25,4 +25,8 @@ class model_company extends CI_Model{
         $dt = $this->db->get('company')->row();
         return $dt->address;
     }
+
+    function getDetail(){
+        return $this->db->query("select * from companydetail limit 1")->row();        
+    }
 }

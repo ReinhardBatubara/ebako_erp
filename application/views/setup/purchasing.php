@@ -21,11 +21,11 @@
                         <?php
                         $strarray = str_replace(array("{", "}"), "", $result->itemgroup);
                         $arritemgroup = explode(',', $strarray);
-                        // foreach ($itemgroup as $result2) {
-                        //     if (in_array($result2->id, $arritemgroup)) {
-                        //         echo "&nbsp;" . $result2->names . ", ";
-                        //     }
-                        // }
+                        foreach ($itemgroup as $result2) {
+                            if (in_array($result2->id, $arritemgroup)) {
+                                echo "&nbsp;" . $result2->names . ", ";
+                            }
+                        }
                         ?>                    
                     </td>
                     <td align="center">

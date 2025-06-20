@@ -24,8 +24,8 @@ class setup extends CI_Controller {
         $this->load->model('model_groups');
         $this->load->model('model_company');
         $data['purchasing'] = $this->model_setup->selectAllPurchasingGroup();        
-        // $data['itemgroup'] = $this->model_groups->selectAll();
-        // $data['company'] = $this->model_company->getDetail();
+        $data['itemgroup'] = $this->model_groups->selectAllResult();
+        $data['company'] = $this->model_company->getDetail();
         $this->load->view('setup/view',$data);
     }
 

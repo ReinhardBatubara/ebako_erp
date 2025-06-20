@@ -1,89 +1,111 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Perbaikan: Nama class diawali huruf besar sesuai standar CodeIgniter
-class Directlabour extends CI_Controller {
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+class directlabour extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         if (!$this->session->userdata('id')) {
-            redirect('home/logout'); 
+            echo "<script>location.reload()</script>";
         }
         $this->load->model('model_directlabour');
         $this->load->model('model_user');
-        $this->load->helper('url');
-        $this->load->library('pagination');
     }
 
-    // Fungsi helper untuk mengambil data dan paginasi
-    private function _get_data($offset = 0) {
-        $description = $this->input->post('description');
-        
-        $config['base_url'] = site_url('directlabour/search');
-        // PERBAIKAN: Memanggil fungsi get_count() yang baru dari model
-        $config['total_rows'] = $this->model_directlabour->get_count($description);
-        $config['per_page'] = 10;
-        $config['uri_segment'] = 3;
-        
-        $this->pagination->initialize($config);
-        
-        // Menyiapkan data untuk view
-        // PERBAIKAN: Memanggil fungsi get_data() yang baru dari model
-        $data['directlabour'] = $this->model_directlabour->get_data($description, $config['per_page'], $offset);
-        $data['pagination'] = $this->pagination->create_links();
+    function index() {
         $data['accessmenu'] = explode('|', $this->model_user->getAction($this->session->userdata('id'), "directlabour"));
-
-        return $data;
-    }
-
-    public function index() {
-        $data = $this->_get_data(0);
+        $offset = 0;
+        $description = "";
+        $data['num_rows'] = $this->model_directlabour->getNumRows($description);
+        $limit = $this->config->item('limit');
+        $data['offset'] = $offset + 1;
+        $data['num_page'] = (int) ceil($data['num_rows'] / $limit);
+        $data['first'] = 0;
+        $data['prev'] = (($offset - $limit) < 0) ? 0 : ($offset - $limit);
+        $data['next'] = (($offset + $limit) > $data['num_rows']) ? $offset : ($offset + $limit);
+        $data['last'] = ($data['num_page'] * $limit) > $data['num_rows'] ? (($data['num_page'] - 1) * $limit) : ($data['num_page'] * $limit);
+        $data['page'] = (int) ceil($offset / $limit) + 1;
+        $data['directlabor'] = $this->model_directlabour->search($description, $limit, $offset);
         $this->load->view('directlabour/view', $data);
     }
 
-    public function search($offset = 0) {
-        $data = $this->_get_data($offset);
+    function search($offset) {
+        $data['accessmenu'] = explode('|', $this->model_user->getAction($this->session->userdata('id'), "directlabour"));
+        $description = $this->input->post('description');
+        $data['num_rows'] = $this->model_directlabour->getNumRows($description);
+        $limit = $this->config->item('limit');
+        $data['offset'] = $offset + 1;
+        $data['num_page'] = (int) ceil($data['num_rows'] / $limit);
+        $data['first'] = 0;
+        $data['prev'] = (($offset - $limit) < 0) ? 0 : ($offset - $limit);
+        $data['next'] = (($offset + $limit) > $data['num_rows']) ? $offset : ($offset + $limit);
+        $data['last'] = ($data['num_page'] * $limit) > $data['num_rows'] ? (($data['num_page'] - 1) * $limit) : ($data['num_page'] * $limit);
+        $data['page'] = (int) ceil($offset / $limit) + 1;
+        $data['directlabor'] = $this->model_directlabour->search($description, $limit, $offset);
         $this->load->view('directlabour/search', $data);
     }
 
-    public function add() {
-        $this->load->model('model_unit');
-        $data['unit'] = $this->model_unit->selectAll(); // Pastikan model & fungsi ini ada
-        $this->load->view('directlabour/add', $data);
+    function add() {
+        if (!$this->session->userdata('id')) {
+            echo "<script>alert('Session Expired!\\nPlease Log out and Login Again!');location.reload()</script>";
+        } else {
+            $this->load->model('model_unit');
+            $data['unit'] = $this->model_unit->selectAll();
+            $this->load->view('directlabour/add', $data);
+        }
     }
 
-    public function save() {
-        $data = [
-            'description' => $this->input->post('description'),
-            'unit'        => $this->input->post('unitid'), // Sesuai ID di form
-            'price'       => $this->input->post('price')
-        ];
-        $this->model_directlabour->insert($data);
-        redirect('directlabour');
+    function save() {
+        if (!$this->session->userdata('id')) {
+            echo "<script>alert('Session Expired!\\nPlease Log out and Login Again!');location.reload()</script>";
+        } else {
+            $directlabour = array(
+                "description" => $this->input->post('description'),
+                "unit" => $this->input->post('unitid'),
+                "price" => $this->input->post('price'),
+            );
+            $this->model_directlabour->insert($directlabour);
+        }
     }
 
-    public function edit($id) {
-        $this->load->model('model_unit');
-        $data['unit'] = $this->model_unit->selectAll();
-        // PERBAIKAN: Memanggil fungsi get_by_id() yang baru dari model
-        $data['directlabour'] = $this->model_directlabour->get_by_id($id);
-        $this->load->view('directlabour/edit', $data);
+    function edit($id) {
+        if (!$this->session->userdata('id')) {
+            echo "<script>alert('Session Expired!\\nPlease Log out and Login Again!');location.reload()</script>";
+        } else {
+            $this->load->model('model_unit');
+            $data['unit'] = $this->model_unit->selectAll();
+            $data['directlabour'] = $this->model_directlabour->selectById($id);
+            $this->load->view('directlabour/edit', $data);
+        }
     }
 
-    public function update() {
-        $id = $this->input->post('id');
-        $data = [
-            'description' => $this->input->post('description'),
-            'unit'        => $this->input->post('unitid'),
-            'price'       => $this->input->post('price')
-        ];
-        $this->model_directlabour->update($id, $data);
-        redirect('directlabour');
+    function update() {
+        if (!$this->session->userdata('id')) {
+            echo "<script>alert('Session Expired!\\nPlease Log out and Login Again!');location.reload()</script>";
+        } else {
+            $id = $this->input->post('id');
+            $directlabour = array(
+                "description" => $this->input->post('description'),
+                "unit" => $this->input->post('unitid'),
+                "price" => $this->input->post('price'),
+            );
+            $this->model_directlabour->update($directlabour, array("id" => $id));
+        }
     }
 
-    public function delete($id) {
-        $this->model_directlabour->delete($id);
-        redirect('directlabour');
+    function delete($id) {
+        if (!$this->session->userdata('id')) {
+            echo "<script>alert('Session Expired!\\nPlease Log out and Login Again!');location.reload()</script>";
+        } else {
+            $this->model_directlabour->delete($id);
+        }
     }
+
 }
 ?>
+
+
