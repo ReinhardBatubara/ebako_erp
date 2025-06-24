@@ -1,41 +1,41 @@
-<br/>
-<br/>
-<br/>
-<center>
-    <div class="panel" style="width: 400px;">
-        <h4>Add Direct Labor</h4><br/>
-        <table>        
+<div id="directlabour_dialog" class="easyui-dialog"
+     data-options="closed:true, modal:true, border:'thin', buttons:'#directlabour_dialog_buttons'"
+     style="width:450px; padding:10px;">
+    <form id="directlabour_form" method="post" novalidate>
+        <input type="hidden" name="id" id="dl_id">
+        <table cellpadding="5">
             <tr>
-                <td align="right"><span class="labelelement">Description :</span></td>
-                <td><input type="text" id="description" size="30" /></textarea></td>  
+                <td align="right">Description:</td>
+                <td><input name="description" class="easyui-textbox" required="true" style="width:280px;"></td>
             </tr>
             <tr>
-                <td align="right"><span class="labelelement">Unit :</span></td>
+                <td align="right">Unit:</td>
                 <td>
-                    <select id="unitid">
-                        <option value="0"></option>
+                    <select name="unit" class="easyui-combobox" required="true" style="width:150px;">
+                        <option value=""></option>
                         <?php
-                        foreach ($unit as $result) {
-                            echo "<option value='" . $result->codes . "'>" . $result->codes . "</option>";
+                        if (isset($unit)) {
+                            foreach ($unit as $result) {
+                                echo "<option value='" . $result->codes . "'>" . $result->codes . "</option>";
+                            }
                         }
                         ?>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td align="right"><span class="labelelement">Price :</span></td>
-                <td><input type="text" name="names" id="price" size="15" style="text-align: right;" onblur="if(isNaN($(this).val())){alert('Required Number');$(this).val('')}" style="text-align: center; width: 100%;"/></td>
-            </tr>   
-            <tr>
-                <td>&nbsp;</td>
+                <td align="right">Price:</td>
                 <td>
-                    <br/>
-                    <button onclick="directlabour_insert()">Save</button>
-                    <button onclick="directlabour_add()">Reset</button>
-                    <button onclick="directlabour_view()">Cancel</button>
+                    <input name="price" class="easyui-numberbox" required="true"
+                           data-options="precision:0,groupSeparator:'.',decimalSeparator:','"
+                           style="width:150px; text-align: right;">
                 </td>
             </tr>
         </table>
-        <br/>
-    </div>
-</center>
+    </form>
+</div>
+
+<div id="directlabour_dialog_buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="directlabour_save()" style="width:90px">Save</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#directlabour_dialog').dialog('close')" style="width:90px">Cancel</a>
+</div>

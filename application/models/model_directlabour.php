@@ -1,64 +1,45 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+class Model_directlabour extends CI_Model {
 
-/**
- * Description of model_directlabour
- *
- * @author hp
- */
-class model_directlabour extends CI_Model {
-
-    //put your code here
     public function __construct() {
         parent::__construct();
     }
 
-    function selectAll() {
-        return $this->db->query("select * from directlabour")->result();
-    }
-
-    function getNumRows($description) {
-        $query = "select * from directlabour where true ";
-        if (!empty($description)) {
-            $query .= " and description ilike '%$description%' ";
+    // Fungsi generik untuk mengambil data dengan paginasi untuk EasyUI Datagrid
+    function get($query) {
+        $page = $this->input->post('page');
+        $rows = $this->input->post('rows');
+        $result = array();
+        $data = "";
+        if (!empty($page) && !empty($rows)) {
+            $offset = ($page - 1) * $rows;
+            $result['total'] = $this->db->query($query)->num_rows();
+            $query .= " limit $rows offset $offset";
+            $result = array_merge($result, array('rows' => $this->db->query($query)->result()));
+            return json_encode($result);
+        } else {
+            $data = json_encode($this->db->query($query)->result());
         }
-        return $this->db->query($query)->num_rows();
+        return $data;
     }
 
-    function search($description, $limit, $offset) {
-        $query = "select * from directlabour where true ";
-        if (!empty($description)) {
-            $query .= " and description ilike '%$description%' ";
-        }
-        $query .= " order by id desc limit $limit offset $offset ";
-        return $this->db->query($query)->result();
+    function selectAllResult() {
+        return $this->db->get('direct_labour')->result();
     }
 
-    function selectById($id) {
-        return $this->db->query("select * from directlabour where id=$id")->row();
+    // Fungsi untuk memasukkan data baru ke tabel 'direct_labour'
+    function insert($data) {
+        return $this->db->insert('direct_labour', $data);
     }
 
-    function insert($directlabour) {
-        return $this->db->insert('directlabour', $directlabour);
+    // Fungsi untuk memperbarui data di tabel 'direct_labour'
+    function update($data, $where) {
+        return $this->db->update('direct_labour', $data, $where);
     }
 
-    function update($directlabour, $where) {
-        return $this->db->update('directlabour', $directlabour, $where);
+    // Fungsi untuk menghapus data dari tabel 'direct_labour'
+    function delete($where) {
+        return $this->db->delete('direct_labour', $where);
     }
-
-    function delete($id) {
-        return $this->db->query("delete from directlabour where id=$id");
-    }
-
-    function getPrice($itemid) {
-        $query = "select price,curr from directlabour where id=$itemid limit 1;";
-        return $this->db->query($query)->row();
-    }
-
 }
-
-?>

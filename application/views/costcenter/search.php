@@ -19,20 +19,21 @@
         $number = 1;
         foreach ($costcenter as $result) {
             ?>
-            <tr>
+            <tr class="data-row" data-id="<?php echo $result->id ?>" style="cursor: pointer;">
                 <td align="right"><?php echo $number++ ?></td>
                 <td><?php echo $result->code ?>&nbsp;</td>
                 <td><?php echo $result->description ?></td>
                 <td><?php echo $result->member_list ?></td>
                 <td>
                     <?php
-                    if (in_array('edit', $accessmenu)) {
-                        echo "<a href='javascript:costcenter_edit($result->id)'><img class='miniaction' src='images/edit.png'>Edit&nbsp;&nbsp;&nbsp;</a>";
-                    }if (in_array('set_member', $accessmenu)) {
+                    // if (in_array('edit', $accessmenu)) {
+                    //     echo "<a href='javascript:costcenter_edit($result->id)'><img class='miniaction' src='images/edit.png'>Edit&nbsp;&nbsp;&nbsp;</a>";
+                    // }
+                    if (in_array('set_member', $accessmenu)) {
                         echo "<a href='javascript:costcenter_set_member($result->id)'><img class='miniaction' src='images/set.png'>Set Member&nbsp;</a>";
-                    }if (in_array('delete', $accessmenu)) {
-                        echo "<a href='javascript:costcenter_delete($result->id)'><img class='miniaction' src='images/delete.png'>Delete&nbsp;</a>";
-                    }
+                     }//if (in_array('delete', $accessmenu)) {
+                    //     echo "<a href='javascript:costcenter_delete($result->id)'><img class='miniaction' src='images/delete.png'>Delete&nbsp;</a>";
+                    // }
                     ?>                            
                 </td>
             </tr>

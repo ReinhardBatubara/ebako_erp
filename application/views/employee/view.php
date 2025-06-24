@@ -54,20 +54,22 @@
       <th field="id" width="60" align="center" sortable="true">ID</th>
       <th field="name" width="120" halign="center" sortable="true">Name</th>
       <th field="startdate_f" width="80" align="center" sortable="true">Join Date</th>
-      <th field="payrollstatus" width="80" align="center" sortable="true">Payroll Status</th>
-      <th field="status" width="50" align="center" sortable="true">Status</th>
+      <!-- <th field="payrollstatus" width="80" align="center" sortable="true">Payroll Status</th> -->
+      <th field="area_id" width="80" align="center" sortable="true">Area</th>
+      <!-- <th field="status" width="50" align="center" sortable="true">Status</th> -->
       <th field="department" width="120" halign="center" sortable="true">Department</th>
-      <th field="section" width="100" halign="center" sortable="true">Section</th>
+      <th field="sub_department" width="120" halign="center" sortable="true">Sub Department</th>
+      <!-- <th field="section" width="100" halign="center" sortable="true">Section</th> -->
       <!--<th field="subsection" width="100" halign="center" sortable="true">Sub Section</th>-->
       <th field="position" width="100" halign="center" sortable="true">Job Title</th>
-      <th field="birthplace" width="80" halign="center" sortable="true">Birth Place</th>
-      <th field="dob_f" width="80" align="center" sortable="true">DoB</th>
-      <th field="sex" width="40" align="center" sortable="true">Sex</th>
-      <th field="familystatus" width="40" align="center" sortable="true">Dependent</th>
-      <th field="address" width="250" halign="center" sortable="true">Address</th>
-      <th field="othersidentity" width="120" halign="center">Identity</th>
-      <th field="phone" width="100" halign="center">Phone</th>
-      <th field="email" width="100" halign="center">Email</th>
+      <!-- <th field="birthplace" width="80" halign="center" sortable="true">Birth Place</th> -->
+      <!-- <th field="dob_f" width="80" align="center" sortable="true">DoB</th>
+      <th field="sex" width="40" align="center" sortable="true">Sex</th> -->
+      <!-- <th field="familystatus" width="40" align="center" sortable="true">Dependent</th>
+      <th field="address" width="250" halign="center" sortable="true">Address</th> -->
+      <!-- <th field="othersidentity" width="120" halign="center">Identity</th> -->
+      <!-- <th field="phone" width="100" halign="center">Phone</th> -->
+      <!-- <th field="email" width="100" halign="center">Email</th> -->
 <!--            <th field="dob" width="80" align="center">DoB</th>
       <th field="department" width="100" halign="center">Department</th>
       <th field="position" width="100" halign="center">Job Title</th>

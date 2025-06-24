@@ -41,6 +41,8 @@ class model_employee extends CI_Model {
                 'name' => $data->name,
                 'department' => $data->department,
                 'departmentid' => $data->departmentid,
+                'sub_department' => $data->sub_department,
+                'sub_departmentid' => $data->sub_departmentid,
                 'position' => $data->position
             );
         }

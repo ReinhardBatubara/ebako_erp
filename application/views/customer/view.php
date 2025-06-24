@@ -37,7 +37,7 @@
   <thead>
     <tr>
       <th field="id"hidden="true"></th>            
-      <th field="code" width="100" align="center" sortable="true">Code</th>
+      <th field="customernumber" width="100" align="center" sortable="true">ID</th>
       <th field="name" width="150" halign="center" sortable="true">Name</th>
       <th field="address1" width="200" halign="center" sortable="true">Address</th>
       <th field="city" width="100" align="center" sortable="true">City</th>

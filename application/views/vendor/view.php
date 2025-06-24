@@ -62,9 +62,9 @@
     <thead>
         <tr>
             <th field="id"hidden="true"></th>            
-            <th field="code" width="100" align="center" sortable="true">Code</th>
-            <th field="name" width="120" halign="center" sortable="true">Name</th>
-            <th field="currency" width="120" halign="center" sortable="true">Currency</th>
+            <th field="vendornumber" width="100" align="center" sortable="true">ID</th>
+            <th field="name" width="200" halign="center" sortable="true">Name</th>
+            <th field="curr" width="120" halign="center" sortable="true">Currency</th>
             <th field="taxable" width="80" align="center" sortable="true">Taxable</th>
             <th field="payment_terms" width="100" align="center" sortable="true">Payment Terms</th>
             <th field="address1" width="200" halign="center" sortable="true">Address</th>

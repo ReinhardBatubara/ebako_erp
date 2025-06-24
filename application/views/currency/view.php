@@ -39,7 +39,7 @@
     <thead>
         <tr>
             <th field="curr" width="100" align="center">Code</th>            
-            <th field="desc" width="400" halign="center">Description</th>            
+            <th field="desc" width="400" halign="center">Description</th> 
         </tr>
     </thead>
 </table>

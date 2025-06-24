@@ -1,89 +1,62 @@
-<div id="vendor_toolbar" style="padding-bottom: 0;">     
-    <form id="vendor_search_form" onsubmit="vendor_search();return false;">       
-    Code : 
-    <input type="text" 
-           size="12" 
-           class="easyui-validatebox" 
-           id="vendor_code_s" 
-           onkeyup="if (event.keyCode == 13) {
-                       vendor_search()
-                   }"
-           />    
-    Name : 
-    <input type="text" 
-           size="12" 
-           class="easyui-validatebox" 
-           id="vendor_name_s" 
-           onkeyup="if (event.keyCode == 13) {
-                       vendor_search()
-                   }"
-           />    
-    Address : 
-    <input type="text" 
-           size="20" 
-           class="easyui-validatebox" 
-           id="vendor_address_s"
-           onkeyup="if (event.keyCode == 13) {
-                       vendor_search()
-                   }"
-           />
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="vendor_search()"> Search</a>
-    <?php
-    if (in_array('add', $action)) {
-        ?>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="vendor_add()">Add</a>
-        <?php
-    }if (in_array('edit', $action)) {
-        ?>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="vendor_edit()">Edit</a>
-        <?php
-    }if (in_array('delete', $action)) {
-        ?>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="vendor_delete()">Delete</a>
-        <?php
-    }
-    ?>
-    </form>
+<div id="directlabour_toolbar" style="padding-bottom: 0;">
+    Description :
+    <input type="text" size="20" class="easyui-textbox" id="dl_description_s"
+           onkeypress="if (event.keyCode === 13) directlabour_search()" />
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="directlabour_search()"></a>
+    
+    <?php if (in_array('add', $accessmenu)) { ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="directlabour_add()">Add</a>
+    <?php } if (in_array('edit', $accessmenu)) { ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="directlabour_edit()">Edit</a>
+    <?php } if (in_array('delete', $accessmenu)) { ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="directlabour_delete()">Delete</a>
+    <?php } ?>
 </div>
-<table id="vendor" data-options="
-       url:'<?php echo site_url('vendor/get') ?>',
+
+<table id="directlabour_grid" data-options="
+       url:'<?php echo site_url('directlabour/get') ?>',
        method:'post',
-       title:'Vendor',
+       title:'Direct Labour',
        border:true,
        singleSelect:true,
        fit:true,
        rownumbers:true,
-       fitColumns:false,
+       fitColumns:true,
        pagination:true,
        striped:true,
        sortName:'id',
        sortOrder:'desc',
-       toolbar:'#vendor_toolbar'">
+       toolbar:'#directlabour_toolbar'">
     <thead>
         <tr>
-            <th field="id"hidden="true"></th>            
-            <th field="code" width="100" align="center" sortable="true">Code</th>
-            <th field="name" width="120" halign="center" sortable="true">Name</th>
-            <th field="currency" width="120" halign="center" sortable="true">Currency</th>
-            <th field="taxable" width="80" align="center" sortable="true">Taxable</th>
-            <th field="payment_terms" width="100" align="center" sortable="true">Payment Terms</th>
-            <th field="address1" width="200" halign="center" sortable="true">Address</th>
-            <th field="city" width="100" align="center" sortable="true">City</th>
-            <th field="state" width="100" align="center" sortable="true">State</th>
-            <th field="zipcode" width="100" align="center">Zip Code</th>
-            <th field="country" width="100" align="center" sortable="true">Country</th>
-            <th field="contact" width="100" halign="center">Contact Person</th>
-            <th field="service" width="200" halign="center" sortable="true">Service</th>
-            <th field="phone" width="100" halign="center" sortable="true">Phone</th>
-            <th field="fax" width="100" align="center">Fax</th>
-            <th field="email" width="100" align="center">Email</th>         
+            <th field="id" hidden="true"></th>
+            <th field="description" width="60" sortable="true">Description</th>
+            <th field="unit" width="15" align="center" sortable="true">Unit</th>
+            <th field="price" width="25" align="right" sortable="true" formatter="formatRupiah">Price</th>
         </tr>
     </thead>
 </table>
+
 <script type="text/javascript">
-    $(function () {
-        $('#vendor').datagrid({});
+    // Fungsi untuk memformat angka menjadi format Rupiah
+    function formatRupiah(value, row) {
+        if (value) {
+            <?php if (in_array('view_price', $accessmenu)) { ?>
+                return new Intl.NumberFormat('id-ID').format(value);
+            <?php } else { ?>
+                return "-";
+            <?php } ?>
+        }
+        return value;
+    }
+
+    // Inisialisasi Datagrid saat halaman dimuat
+    $(function() {
+        $('#directlabour_grid').datagrid();
     });
 </script>
+
 <?php
-$this->load->view('vendor/add');
+// Memuat file dialog
+$this->load->view('directlabour/add');
+?>

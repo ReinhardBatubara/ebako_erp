@@ -33,6 +33,7 @@ class employee extends CI_Controller {
             select 
             employee.*,
             (department.code || ': ' || department.name) department,
+            
             (position.code || ': '|| position.name) as position,
             (to_char(employee.startdate,'DD-MM-YYYY')) startdate_f,
             (to_char(employee.dob,'DD-MM-YYYY')) dob_f 

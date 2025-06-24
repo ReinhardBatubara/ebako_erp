@@ -1,95 +1,68 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+var url; // Variabel global untuk menyimpan URL save/update
 
-
-function directlabour_view(){
-    $("#messagelistcontainer").html("<center><img style='padding-top:50px;' src='images/loading1.gif'/></center>");
-    $('#messagelistcontainer').load(url+'directlabour');
-}
-
-function directlabour_search(offset){
-    var description = $('#description_s').val();
-    $("#groupsdata").html("<center><img style='padding-top:50px;' src='images/loading1.gif'/></center>");
-    $.post(url+'directlabour/search/'+offset,{
-        description: description
-    },function(content){
-        $('#groupsdata').empty();
-        $('#groupsdata').append(content);
+// Fungsi untuk mencari data
+function directlabour_search() {
+    $('#directlabour_grid').datagrid('reload', {
+        description: $('#dl_description_s').val()
     });
 }
 
-function directlabour_add(){
-    $('#messagelistcontainer').load(url+'directlabour/add');
+// Fungsi untuk membuka dialog tambah data
+function directlabour_add() {
+    $('#directlabour-form').dialog('open').dialog('setTitle', 'New Direct Labour');
+    $('#directlabour-input').form('clear');
+    url = base_url + 'directlabour/save';
 }
 
-function directlabour_insert(){
-    var description = $('#description').val();
-    var unitid = $('#unitid').val();
-    var price = $('#price').val();
-    
-    var msg = "";
-    if(description == ""){
-        msg += "- Field 'Description' Required<br/>";
+// Fungsi untuk membuka dialog edit data
+function directlabour_edit() {
+    var row = $('#directlabour_grid').datagrid('getSelected');
+    if (row) {
+        $('#directlabour_dialog').dialog('open').dialog('setTitle', 'Edit Direct Labour');
+        $('#directlabour_form').form('load', row);
+        url = base_url + 'directlabour/update' + row.id;
+    } else {
+        $.messager.alert('Warning', 'Please select a row to edit.', 'warning');
     }
-    if(unitid == 0){
-        msg += "- Field 'Unit' Required<br/>";
-    }
-    if(price == ""){
-        msg += "- Field 'Price' Required<br/>";
-    }
-    if(msg != ""){
-        display_error_message(msg);
-    }else{
-        $.post(url+'directlabour/save',{
-            description: description,
-            unitid: unitid,
-            price: price
-        },function(){
-            directlabour_view();
+}
+
+// Fungsi untuk menyimpan (baik data baru maupun update)
+function directlabour_save() {
+    $('#directlabour_form').form('submit', {
+        url: url,
+        onSubmit: function() {
+            return $(this).form('validate');
+        },
+        success: function(content) {
+            var result = eval('(' + content + ')');
+            if (result.success) {
+                $('#directlabour_dialog').dialog('close');
+                $('#directlabour_grid').datagrid('reload');
+            } else {
+                $.messager.alert('Error', result.msg, 'error');
+            }
+        }
+    });
+}
+
+// Fungsi untuk menghapus data
+function directlabour_delete() {
+    var row = $('#directlabour_grid').datagrid('getSelected');
+    if (row) {
+        $.messager.confirm('Confirm', 'Are you sure you want to delete this data?', function(r) {
+            if (r) {
+                $.post(base_url + 'directlabour/delete', { 
+                    id: row.id 
+                }, function(result) {
+                    if (result.success) {
+                        $('#directlabour_grid').datagrid('reload');
+                    } else {
+                        $.messager.alert('Error', result.msg, 'error');
+                    }
+                }, 'json');
+            }
         });
-    }
-}
-
-function directlabour_edit(id){
-    $('#messagelistcontainer').load(url+'directlabour/edit/'+id);
-}
-
-function directlabour_update(){
-    var id = $('#id').val();
-    var description = $('#description').val();
-    var unitid = $('#unitid').val();
-    var price = $('#price').val();
-    
-    var msg = "";
-    if(description == ""){
-        msg += "- Field 'Description' Required<br/>";
-    }
-    if(unitid == 0){
-        msg += "- Field 'Unit' Required<br/>";
-    }
-    if(price == ""){
-        msg += "- Field 'Price' Required<br/>";
-    }
-    if(msg != ""){
-        display_error_message(msg);
-    }else{
-        $.post(url+'directlabour/update',{
-            id: id,
-            description: description,
-            unitid: unitid,
-            price: price
-        },function(){
-            directlabour_view();
-        });
-    }
-}
-
-function directlabour_delete(id){
-    if(confirm('Sure?')){
-        $.get(url+'directlabour/delete/'+id,function(){
-            directlabour_view();
-        });    
+    } else {
+        $.messager.alert('Warning', 'Please select a row to delete.', 'warning');
     }
 }
