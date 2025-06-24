@@ -10,7 +10,7 @@
  *
  * @author hp
  */
-class item extends CI_Controller {
+class Item extends CI_Controller {
 
     //put your code here
 
