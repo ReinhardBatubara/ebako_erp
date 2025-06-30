@@ -17,68 +17,148 @@ class model_item extends CI_Model {
         parent::__construct();
     }
 
-    function get($query) {
+    // function get($query) {
 
-        $page = $this->input->post('page');
-        $rows = $this->input->post('rows');
-        $data = "";
-        if (!empty($page) && !empty($rows)) {
-            $offset = ($page - 1) * $rows;
-            $result = array();
-            $result['total'] = $this->db->query($query)->num_rows();
-            $row = array();
-            $query .= " limit $rows offset $offset";
-            $criteria = $this->db->query($query)->result();
-            foreach ($criteria as $data) {
-                $row[] = array(
-                    'id' => $data->id,
-                    'groupsid' => $data->groupid,
-                    'groups' => $data->groups,
-                    'partnumber' => $data->partnumber,
-                    'description' => $data->description,
-                    'images' => $data->images,
-                    'reorderpoint' => $data->reorderpoint,
-                    'isstock' => ($data->isstock == 't') ? "Yes" : "No",
-                    'qccheck' => ($data->qccheck == 't') ? "Yes" : "No",
-                    'yield' => $data->yield,
-                    'category' => $data->category,
-                    'category_f' => $data->category_f,
-                    'unitcode' => $data->unitcode,
-                    'stock' => $data->stock,
-                    'moq' => $data->moq,
-                    'lt' => $data->lt,
-                    'active' => $data->active
-                );
-            }
-            $result = array_merge($result, array('rows' => $row));
-            $data = json_encode($result);
-        } else {
-            $criteria = $this->db->query($query)->result();
-            foreach ($criteria as $data) {
-                $row[] = array(
-                    'id' => $data->id,
-                    'groupid' => $data->groupid,
-                    'groups' => $data->groups,
-                    'partnumber' => $data->partnumber,
-                    'description' => $data->description,
-                    'images' => $data->images,
-                    'reorderpoint' => $data->reorderpoint,
-                    'isstock' => ($data->isstock == 't') ? "Yes" : "No",
-                    'qccheck' => ($data->qccheck == 't') ? "Yes" : "No",
-                    'yield' => $data->yield,
-                    'category' => $data->category,
-                    'category_f' => $data->category_f,
-                    'unitcode' => $data->unitcode,
-                    'stock' => $data->stock,
-                    'moq' => $data->moq,
-                    'lt' => $data->lt,
-                    'active' => $data->active
-                );
-            }
-            $data = json_encode($row);
+    //     $page = $this->input->post('page');
+    //     $rows = $this->input->post('rows');
+    //     $data = "";
+    //     if (!empty($page) && !empty($rows)) {
+    //         $offset = ($page - 1) * $rows;
+    //         $result = array();
+    //         $result['total'] = $this->db->query($query)->num_rows();
+    //         $row = array();
+    //         $query .= " limit $rows offset $offset";
+    //         $criteria = $this->db->query($query)->result();
+    //         foreach ($criteria as $data) {
+    //             $row[] = array(
+    //                 'id' => $data->id,
+    //                 'groupsid' => $data->groupid,
+    //                 'groups' => $data->groups,
+    //                 'partnumber' => $data->partnumber,
+    //                 'description' => $data->description,
+    //                 'images' => $data->images,
+    //                 'reorderpoint' => $data->reorderpoint,
+    //                 'isstock' => ($data->isstock == 't') ? "Yes" : "No",
+    //                 'qccheck' => ($data->qccheck == 't') ? "Yes" : "No",
+    //                 'yield' => $data->yield,
+    //                 'category' => $data->category,
+    //                 'category_f' => $data->category_f,
+    //                 'unitcode' => $data->unitcode,
+    //                 'stock' => $data->stock,
+    //                 'moq' => $data->moq,
+    //                 'lt' => $data->lt,
+    //                 'active' => $data->active
+    //             );
+    //         }
+    //         $result = array_merge($result, array('rows' => $row));
+    //         $data = json_encode($result);
+    //     } else {
+    //         $criteria = $this->db->query($query)->result();
+    //         foreach ($criteria as $data) {
+    //             $row[] = array(
+    //                 'id' => $data->id,
+    //                 'groupid' => $data->groupid,
+    //                 'groups' => $data->groups,
+    //                 'partnumber' => $data->partnumber,
+    //                 'description' => $data->description,
+    //                 'images' => $data->images,
+    //                 'reorderpoint' => $data->reorderpoint,
+    //                 'isstock' => ($data->isstock == 't') ? "Yes" : "No",
+    //                 'qccheck' => ($data->qccheck == 't') ? "Yes" : "No",
+    //                 'yield' => $data->yield,
+    //                 'category' => $data->category,
+    //                 'category_f' => $data->category_f,
+    //                 'unitcode' => $data->unitcode,
+    //                 'stock' => $data->stock,
+    //                 'moq' => $data->moq,
+    //                 'lt' => $data->lt,
+    //                 'active' => $data->active
+    //             );
+    //         }
+    //         $data = json_encode($row);
+    //     }
+    //     return $data;
+    // }
+
+    function get($query) {
+    $page = $this->input->post('page');
+    $rows = $this->input->post('rows');
+    $data = "";
+    if (!empty($page) && !empty($rows)) {
+        $offset = ($page - 1) * $rows;
+        $result = array();
+        $result['total'] = $this->db->query($query)->num_rows();
+        $row = array();
+        $query .= " LIMIT $rows OFFSET $offset";
+        $criteria = $this->db->query($query)->result();
+        foreach ($criteria as $data) {
+            $row[] = array(
+                'id' => $data->id,
+                'partnumber' => $data->partnumber, 
+                'description' => $data->descriptions,
+                'rack' => $data->rack,
+                'images' => $data->images,
+                'reorderpoint' => $data->reorderpoint,
+                'names' => $data->names,
+                'isstock' => ($data->isstock == 't' || $data->isstock == true) ? "Yes" : "No",
+                'price' => $data->price,
+                'curr' => $data->curr,
+                'moq' => $data->moq,
+                'lt' => $data->lt,
+                'expdate' => $data->expdate,
+                'qccheck' => ($data->qccheck == 't' || $data->qccheck == true) ? "Yes" : "No",
+                'woodid' => $data->woodid,
+                'yield' => $data->yield,
+                'costing_price' => $data->costing_price,
+                'curr_costing_price' => $data->curr_costing_price,
+                'price_in_base_unit' => $data->price_in_base_unit,
+                'currency_price_base_unit' => $data->currency_price_base_unit,
+                'updated_by' => $data->updated_by,
+                'updated_time' => $data->updated_time,
+                'available_status' => ($data->available_status == 't') ? "Yes" : "No",
+                'smallestunit' => $data->smallestunit,
+                'category' => $data->category
+            );
         }
-        return $data;
+        $result = array_merge($result, array('rows' => $row));
+        $data = json_encode($result);
+    } else {
+        $criteria = $this->db->query($query)->result();
+        $row = array();
+        foreach ($criteria as $data) {
+            $row[] = array(
+                'id' => $data->id,
+                'partnumber' => $data->partnumber, 
+                'description' => $data->descriptions,
+                'rack' => $data->rack,
+                'images' => $data->images,
+                'reorderpoint' => $data->reorderpoint,
+                'names' => $data->names,
+                'isstock' => ($data->isstock == 't' || $data->isstock == true) ? "Yes" : "No",
+                'price' => $data->price,
+                'curr' => $data->curr,
+                'moq' => $data->moq,
+                'lt' => $data->lt,
+                'expdate' => $data->expdate,
+                'qccheck' => ($data->qccheck == 't' || $data->qccheck == true) ? "Yes" : "No",
+                'woodid' => $data->woodid,
+                'yield' => $data->yield,
+                'costing_price' => $data->costing_price,
+                'curr_costing_price' => $data->curr_costing_price,
+                'price_in_base_unit' => $data->price_in_base_unit,
+                'currency_price_base_unit' => $data->currency_price_base_unit,
+                'updated_by' => $data->updated_by,
+                'updated_time' => $data->updated_time,
+                'available_status' => ($data->available_status == 't') ? "Yes" : "No",
+                'smallestunit' => $data->smallestunit,
+                'category' => $data->category
+            );
+        }
+        $data = json_encode($row);
     }
+    return $data;
+}
+
 
     function get_base_unit() {
         

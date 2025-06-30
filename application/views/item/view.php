@@ -26,18 +26,18 @@
     <?php
     if (in_array($this->session->userdata('department'), array(9, 7, 2)) || $this->session->userdata('id') == 'admin') {
         ?>
-        <div data-options="region:'south',split:true" style="height:30%;border-left: none;border-bottom: none;border-top: none;">
+        <!-- <div data-options="region:'south',split:true" style="height:30%;border-left: none;border-bottom: none;border-top: none;">
             <div class="easyui-layout" data-options="fit:true" border="false"> 
                 <div data-options="region:'west'" title="Unit Group And Price" style="width: 35%;" collapsible="false" split="true">
-                    <?php $this->load->view('item/itemunitprice/view') ?>
+                    <?php //$this->load->view('item/itemunitprice/view') ?>
                 </div>
                 <div data-options="region:'center'" title="Unit Conversion">
-                    <?php $this->load->view('item/itemunitrelation/view') ?>
+                    <?php //$this->load->view('item/itemunitrelation/view') ?>
                 </div>
                 <div region="east" collapsible="false" title="Stock On Hand" split="true" style="width: 35%;">
-                    <?php $this->load->view('item/itemwarehousestock/view') ?>
+                    <?php //$this->load->view('item/itemwarehousestock/view') ?>
                 </div>
             </div>
-        </div>
+        </div> -->
     <?php } ?>
 </div>

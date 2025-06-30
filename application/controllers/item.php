@@ -33,66 +33,135 @@ class Item extends CI_Controller {
         $this->load->view('item/view', $data);
     }
 
+    // function get() {
+    //     $code = $this->input->post('partnumber');
+    //     $description = $this->input->post('description');
+    //     $groupsid = $this->input->post('groupsid');
+    //     $category = $this->input->post('category');
+    //     $warehouseid = $this->input->post('warehouseid');
+    //     if ($this->session->userdata('department') == 9 && $this->session->userdata('optiongroup') != -1) {
+    //         $query = "
+    //             with t as (
+    //                     with t_item as (
+    //                     select distinct(itemid),(select item_get_smallest_unit(itemid)) unitcode,warehouseid from itemwarehousestock where warehouseid=" . $this->session->userdata('optiongroup') . "
+    //             ) select item.*,
+    //                     t_item.unitcode,
+    //                     (select item_is_stock(item.id)) isstock,
+    //                     groups.name groups,
+    //                     (case when item.category = 1 then 'Local' when item.category = 2 then 'Import' when item.category = 3 then 'Mix' end) category_f,
+    //                     t_item.warehouseid,
+    //                     (select item_get_stock_by_warehouse_unitcode(item.id,t_item.unitcode,t_item.warehouseid)) stock
+    //                     from t_item join item on t_item.itemid=item.id 
+    //                     join groups on item.groupsid=groups.id 
+    //             ) select t.* from t where true
+    //         ";
+    //     } else {
+    //         $query = "with t as(
+    //                     select 
+    //                     item.*,
+    //                     (select item_get_smallest_unit(item.id)) unitcode,
+    //                     groups.name groups,
+    //                     (case when item.category = 1 then 'Local' when item.category = 2 then 'Import' when item.category = 3 then 'Mix' end) category_f
+    //                     from item 
+    //                     join groups on item.groupsid=groups.id 
+    //                     ) select t.*,(select item_get_stock_by_unit(t.id,t.unitcode)) stock from t ";
+
+    //         if (!empty($warehouseid)) {
+    //             $query .= " join (select distinct itemid from itemwarehousestock where warehouseid=$warehouseid) t_join on t.id=t_join.itemid where true ";
+    //         } else {
+    //             $query .= " where true ";
+    //         }
+    //     }
+
+    //     if (!empty($code)) {
+    //         $query .= " and (t.code ilike '%$code%' or t.description ilike '%$code%')";
+    //     }if (!empty($groupsid)) {
+    //         $query .= " and t.groupsid=$groupsid";
+    //     }if (!empty($category)) {
+    //         $query .= " and (t.category = $category or t.category=3)";
+    //     }
+
+    //     $q = $this->input->post("q");
+    //     if (!empty($q)) {
+    //         $query .= " and (t.code ilike '%$code%' or t.description ilike '%$description%') ";
+    //     }
+    //     $query .= " order by t.id desc ";
+
+    //     $sort = $this->input->post('sort');
+    //     $order = $this->input->post('order');
+    //     $query .= " order by $sort $order ";
+    //     echo $query;
+    //     echo $this->model_item->get($query);
+    // }
+
     function get() {
-        $code = $this->input->post('partnumber');
-        $description = $this->input->post('description');
-        $groupsid = $this->input->post('groupsid');
-        $category = $this->input->post('category');
-        $warehouseid = $this->input->post('warehouseid');
-        if ($this->session->userdata('department') == 9 && $this->session->userdata('optiongroup') != -1) {
-            $query = "
-                with t as (
-                        with t_item as (
-                        select distinct(itemid),(select item_get_smallest_unit(itemid)) unitcode,warehouseid from itemwarehousestock where warehouseid=" . $this->session->userdata('optiongroup') . "
-                ) select item.*,
-                        t_item.unitcode,
-                        (select item_is_stock(item.id)) isstock,
-                        groups.name groups,
-                        (case when item.category = 1 then 'Local' when item.category = 2 then 'Import' when item.category = 3 then 'Mix' end) category_f,
-                        t_item.warehouseid,
-                        (select item_get_stock_by_warehouse_unitcode(item.id,t_item.unitcode,t_item.warehouseid)) stock
-                        from t_item join item on t_item.itemid=item.id 
-                        join groups on item.groupsid=groups.id 
-                ) select t.* from t where true
-            ";
+    $code = $this->input->post('partnumber');
+    $description = $this->input->post('description');
+    $groupsid = $this->input->post('groupsid');
+    $category = $this->input->post('category');
+    $warehouseid = $this->input->post('warehouseid');
+    
+    if ($this->session->userdata('department') == 9 && $this->session->userdata('optiongroup') != -1) {
+        $query = "WITH t AS (
+                    WITH t_item AS (
+                        SELECT DISTINCT(itemid), (SELECT item_get_base_unit(itemid)) unitcode, warehouseid
+                        FROM itemwarehousestock 
+                        WHERE warehouseid=" . $this->session->userdata('optiongroup') . "
+                    ) 
+                    SELECT item.*, t_item.unitcode, 
+                           (SELECT item_is_stock(item.id)) isstock, 
+                           groups.name groups, 
+                           (CASE WHEN item.category = 1 THEN 'Local' WHEN item.category = 2 THEN 'Import' WHEN item.category = 3 THEN 'Mix' END) category_f,
+                           t_item.warehouseid,
+                           (SELECT item_get_stock_by_warehouse_unitcode(item.id,t_item.unitcode,t_item.warehouseid)) stock
+                    FROM t_item 
+                    JOIN item ON t_item.itemid=item.id 
+                    JOIN groups ON item.groupsid=groups.id 
+                  ) 
+                  SELECT t.* FROM t WHERE true";
+    } else {
+        $query = "WITH t AS (
+                    SELECT item.*, 
+                           (SELECT item_get_base_unit(item.id)) unitcode, 
+                           groups.name groups, 
+                           (CASE WHEN item.category = 1 THEN 'Local' WHEN item.category = 2 THEN 'Import' WHEN item.category = 3 THEN 'Mix' END) category_f
+                    FROM item 
+                    JOIN groups ON item.groupsid=groups.id 
+                  ) 
+                  SELECT t.*,(SELECT item_get_stock_by_unitcode(t.id,t.unitcode)) stock 
+                  FROM t ";
+        
+        if (!empty($warehouseid)) {
+            $query .= " JOIN (SELECT DISTINCT itemid FROM itemwarehousestock WHERE warehouseid=$warehouseid) t_join ON t.id=t_join.itemid WHERE true ";
         } else {
-            $query = "with t as(
-                        select 
-                        item.*,
-                        (select item_get_smallest_unit(item.id)) unitcode,
-                        groups.name groups,
-                        (case when item.category = 1 then 'Local' when item.category = 2 then 'Import' when item.category = 3 then 'Mix' end) category_f
-                        from item 
-                        join groups on item.groupsid=groups.id 
-                        ) select t.*,(select item_get_stock_by_unit(t.id,t.unitcode)) stock from t ";
-
-            if (!empty($warehouseid)) {
-                $query .= " join (select distinct itemid from itemwarehousestock where warehouseid=$warehouseid) t_join on t.id=t_join.itemid where true ";
-            } else {
-                $query .= " where true ";
-            }
+            $query .= " WHERE true ";
         }
-
-        if (!empty($code)) {
-            $query .= " and (t.code ilike '%$code%' or t.description ilike '%$code%')";
-        }if (!empty($groupsid)) {
-            $query .= " and t.groupsid=$groupsid";
-        }if (!empty($category)) {
-            $query .= " and (t.category = $category or t.category=3)";
-        }
-
-        $q = $this->input->post("q");
-        if (!empty($q)) {
-            $query .= " and (t.code ilike '%$code%' or t.description ilike '%$description%') ";
-        }
-        $query .= " order by t.id desc ";
-
-        $sort = $this->input->post('sort');
-        $order = $this->input->post('order');
-        $query .= " order by $sort $order ";
-        echo $query;
-        echo $this->model_item->get($query);
     }
+
+    if (!empty($code)) {
+        $query .= " AND (t.partnumber ILIKE '%$code%' OR t.descriptions ILIKE '%$code%')";
+    }
+    if (!empty($groupsid)) {
+        $query .= " AND t.groupsid=$groupsid";
+    }
+    if (!empty($category)) {
+        $query .= " AND (t.category = $category OR t.category=3)";
+    }
+
+    $q = $this->input->post("q");
+    if (!empty($q)) {
+        $query .= " AND (t.partnumber ILIKE '%$q%' OR t.descriptions ILIKE '%$q%')";
+    }
+
+    $query .= " ORDER BY t.id DESC ";
+
+    $sort = $this->input->post('sort');
+    $order = $this->input->post('order');
+    $query .= " ORDER BY $sort $order ";
+
+    echo $this->model_item->get($query);
+}
+
 
     function getfordialog() {
         $page = $this->input->post('page');

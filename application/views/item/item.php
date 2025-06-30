@@ -88,9 +88,9 @@
        toolbar:'#item_toolbar'">
   <thead>
     <tr>           
-      <th field="code" width="80" halign="center" fixed="true" sortable="true">Item Code</th>
-      <th field="description" width="250" halign="center" fixed="true" sortable="true">Item Description</th>
-      <th field="groups" width="80" halign="center" sortable="true">Item group</th>
+      <th field="partnumber" width="80" halign="center" fixed="true" sortable="true">Item Code</th>
+      <th field="descriptions" width="250" halign="center" fixed="true" sortable="true">Item Description</th>
+      <th field="groups" width="80" halign="center" sortable="true">Item Group</th>
       <th field="category_f" width="80" align="center" sortable="true">Category</th>
       <th field="unitcode" width="80" align="center" fixed="true" sortable="true">Base Unit</th>
       <th field="isstock" width="50" align="center" fixed="true" sortable="true">Is Stock</th>
@@ -99,19 +99,11 @@
       <th field="reorderpoint" width="50" align="center" fixed="true" sortable="true">RoP</th>
       <th field="lt" width="60" align="center" fixed="true" sortable="true">Lead Time</th>
       <th field="qccheck" width="50" align="center" fixed="true" sortable="true">Rcve Check</th>
-      <th field="active" width="50" align="center" fixed="true" data-options="formatter:
-          function(value,row,index){
-          if (value == 't'){
-          return 'Y';
-          } else {
-          return 'N';
-          }
-          }
-          " sortable="true">Active</th>
-<!--        <th field="images_view" width="80" align="center" fixed="true">Image</th>-->
+      <th field="available_status" width="50" align="center" fixed="true" sortable="true">Active</th>
     </tr>
   </thead>
 </table>
+
 <script type="text/javascript">
   var item_selected = 0;
   $(function() {
